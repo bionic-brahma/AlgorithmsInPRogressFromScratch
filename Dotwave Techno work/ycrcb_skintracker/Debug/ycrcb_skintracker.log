@@ -1,0 +1,27 @@
+﻿Build started 12/22/2016 2:36:47 PM.
+Project "C:\Users\Art\Documents\Visual Studio 2010\Projects\ycrcb_skintracker\ycrcb_skintracker\ycrcb_skintracker.vcxproj" on node 2 (build target(s)).
+InitializeBuildStatus:
+  Creating "Debug\ycrcb_skintracker.unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"D:\apps\dlib-18.18" /IC:\opencv\build\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+  main.cpp
+c:\users\art\documents\visual studio 2010\projects\ycrcb_skintracker\ycrcb_skintracker\main.cpp(42): warning C4018: '<' : signed/unsigned mismatch
+c:\users\art\documents\visual studio 2010\projects\ycrcb_skintracker\ycrcb_skintracker\main.cpp(101): warning C4018: '<' : signed/unsigned mismatch
+c:\users\art\documents\visual studio 2010\projects\ycrcb_skintracker\ycrcb_skintracker\main.cpp(158): warning C4018: '<' : signed/unsigned mismatch
+c:\users\art\documents\visual studio 2010\projects\ycrcb_skintracker\ycrcb_skintracker\main.cpp(224): warning C4804: '<=' : unsafe use of type 'bool' in operation
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Art\Documents\Visual Studio 2010\Projects\ycrcb_skintracker\Debug\ycrcb_skintracker.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"D:\apps\dlib-18.18" /LIBPATH:C:\opencv\build\x86\vc10\lib opencv_contrib249d.lib opencv_core249d.lib opencv_features2d249d.lib opencv_flann249d.lib opencv_gpu249d.lib opencv_highgui249d.lib opencv_imgproc249d.lib opencv_legacy249d.lib opencv_ml249d.lib opencv_nonfree249d.lib opencv_objdetect249d.lib opencv_ocl249d.lib opencv_photo249d.lib opencv_stitching249d.lib opencv_superres249d.lib opencv_ts249d.lib opencv_video249d.lib opencv_videostab249d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\ycrcb_skintracker.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Art\Documents\Visual Studio 2010\Projects\ycrcb_skintracker\Debug\ycrcb_skintracker.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Art\Documents\Visual Studio 2010\Projects\ycrcb_skintracker\Debug\ycrcb_skintracker.lib" /MACHINE:X86 Debug\source.obj
+  Debug\main.obj
+  Debug\SkinDetector.obj
+source.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/INCREMENTAL:NO' specification
+  ycrcb_skintracker.vcxproj -> C:\Users\Art\Documents\Visual Studio 2010\Projects\ycrcb_skintracker\Debug\ycrcb_skintracker.exe
+Manifest:
+  C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\Art\Documents\Visual Studio 2010\Projects\ycrcb_skintracker\Debug\ycrcb_skintracker.exe;#1" /manifest Debug\ycrcb_skintracker.exe.intermediate.manifest
+FinalizeBuildStatus:
+  Deleting file "Debug\ycrcb_skintracker.unsuccessfulbuild".
+  Touching "Debug\ycrcb_skintracker.lastbuildstate".
+Done Building Project "C:\Users\Art\Documents\Visual Studio 2010\Projects\ycrcb_skintracker\ycrcb_skintracker\ycrcb_skintracker.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:21.32
