@@ -1,0 +1,17 @@
+h=384,cw=219,jw=168,fw=257,Rotio_cw:jw=1.30357,Rotio_fw:jw=1.52976;
+h=293,cw=179,jw=126,fw=221,Rotio_cw:jw=1.42063,Rotio_fw:jw=1.75397;
+h=345,cw=228,jw=156,fw=245,Rotio_cw:jw=1.46154,Rotio_fw:jw=1.57051;
+h=390,cw=209,jw=152,fw=248,Rotio_cw:jw=1.375,Rotio_fw:jw=1.63158;
+h=316,cw=173,jw=128,fw=217,Rotio_cw:jw=1.35156,Rotio_fw:jw=1.69531;
+h=416,cw=233,jw=179,fw=281,Rotio_cw:jw=1.30168,Rotio_fw:jw=1.56983;
+h=312,cw=175,jw=133,fw=213,Rotio_cw:jw=1.31579,Rotio_fw:jw=1.6015;
+h=351,cw=188,jw=139,fw=215,Rotio_cw:jw=1.35252,Rotio_fw:jw=1.54676;
+h=267,cw=157,jw=111,fw=189,Rotio_cw:jw=1.41441,Rotio_fw:jw=1.7027;
+h=394,cw=212,jw=162,fw=253,Rotio_cw:jw=1.30864,Rotio_fw:jw=1.56173;
+h=386,cw=209,jw=161,fw=249,Rotio_cw:jw=1.29814,Rotio_fw:jw=1.54658;
+h=296,cw=232,jw=183,fw=304,Rotio_cw:jw=1.26776,Rotio_fw:jw=1.6612;
+h=424,cw=245,jw=179,fw=285,Rotio_cw:jw=1.36872,Rotio_fw:jw=1.59218;
+h=328,cw=207,jw=150,fw=241,Rotio_cw:jw=1.38,Rotio_fw:jw=1.60667;
+h=245,cw=145,jw=105,fw=185,Rotio_cw:jw=1.38095,Rotio_fw:jw=1.7619;
+h=284,cw=167,jw=123,fw=209,Rotio_cw:jw=1.35772,Rotio_fw:jw=1.69919;
+h=303,cw=206,jw=146,fw=209,Rotio_cw:jw=1.41096,Rotio_fw:jw=1.43151;
