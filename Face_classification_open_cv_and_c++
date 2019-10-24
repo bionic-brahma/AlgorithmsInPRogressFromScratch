@@ -1,0 +1,491 @@
+///////////////////////////////////////////////////////////////////
+Code is made by Devendra kaithal.
+Although is open to modification and commercial use.
+dont forget to mention me in credits.
+///////////////////////////////////////////////////////////////////
+#include<opencv/cv.h>
+#include<opencv/highgui.h>
+#include<opencv2\objdetect\objdetect.hpp>
+#include<opencv2\imgproc\imgproc.hpp>
+#include<string>
+#include<iostream>
+#include<cstdio>
+#include<conio.h>
+#include<fstream>
+#include "opencv2/core/core.hpp"
+#include "opencv2/contrib/contrib.hpp"
+#include<stdio.h>
+//try using boost libraries for processing and system classes
+#include<direct.h>  // for creating the required directory
+using namespace cv;
+using namespace std;
+CascadeClassifier facedetector;
+String xmlmethodsaddress[]={"D:/opencv2.4.9/opencv/sources/data/haarcascades/haarcascade_frontalface_alt_tree.xml","D:/opencv2.4.9/opencv/sources/data/haarcascades/haarcascade_frontalface_default.xml","C:/opencv/sources/data/lbpcascades/lbpcascade_frontalface.xml"};
+
+
+// just references to database
+class candidateData{
+    private:
+        string modelFile;
+        string indexFile;
+        string rootAddress;
+        string personalFile;
+        string commercialFile;
+        string personName;
+    public:
+        string getModelAddress(){
+            return rootAddress+"/"+modelFile;
+        }
+        string getIndexFileName(){
+            return indexFile;
+        }
+        string getPersonName(){
+            return personName;
+        }
+        string getIndexFile(){
+            return rootAddress+"/"+personName+"/"+indexFile;
+        }
+        string getRootAddress(){
+            return rootAddress;
+        }
+        string getPersonalFile(){
+            return rootAddress+"/"+personName+"/"+personalFile;
+        }
+        string getCommercialFile(){
+            return rootAddress+"/"+personName+"/"+commercialFile;
+        }
+        candidateData(string root,string Name){
+            indexFile="imagesIndex.dev";
+            personalFile="aboutMe.dev";
+            commercialFile="myCommerce.dev";
+            modelFile="model.yaml";
+            rootAddress=root;
+            personName=Name;
+        }
+        candidateData(){
+            indexFile="imagesIndex.dev";
+            personalFile="aboutMe.dev";
+            commercialFile="myCommerce.dev";
+            modelFile="model.yaml";
+            personName="NoName";
+        }
+        void root(string root){
+        rootAddress=root;
+        }
+        void name(string name){
+            personName=name;
+        }
+        //~candidateData();
+};
+
+//end of candidateData class
+
+//general facedetection function basedon haarcascade classifier
+std::vector<Rect> detectfaces(Mat img){
+
+    std::vector<Rect> faces;
+    facedetector.detectMultiScale(img, faces, 1.1, 3, 0|CV_HAAR_SCALE_IMAGE,Size(2,2));
+
+    return faces;
+};
+//end of detectfaces()
+
+
+
+/*get boost library in use to creat multiple directories at once.. mkdir is lagging by
+not creating multiple directories at once.*/
+
+
+//tainerInputvectormaker ends here
+
+candidateData trainerDataGrabber(string name,float factor=4,string root="C:/Vintautomation/data",long double cameraID=1,bool devmode=false){
+    try{
+    FILE *infofile;// file to store index (name wid address)
+        candidateData data;
+        //CascadeClassifier *intidetector= intidetector();
+        string prefixadd=root;// here the directory should be created before handed.//drwawback
+
+
+
+
+    if(!facedetector.load(xmlmethodsaddress[0]))   // change here for leant model loading 0 for tree model
+            throw "Contact for technical support: casecadeclassifier is not loading the the haar model";
+
+
+
+        string foldername=name;
+
+        Mat imgcol;
+        double ts,tf;
+        VideoCapture cam;
+
+        data.root(prefixadd);
+        cout<<"Enter folder name:";
+        cin>>foldername;
+        data.name(foldername);
+        prefixadd=prefixadd+"/"+foldername;
+        //cout<<"\n"<<prefixadd<<"   folder created";
+        _mkdir(prefixadd.c_str());
+
+        namedWindow("original vid stream",CV_WINDOW_NORMAL);
+        namedWindow("face-recognition by vintane",1);
+        namedWindow("oriface",1);
+
+        cam.open(cameraID);
+
+        if(!cam.isOpened()){
+            std::cout<<"Attached camera is not properly connected or there is some technical problem\n Trying Primary device camera...\n";
+            cam.open(0);
+            if(cam.isOpened()){
+                std::cout<<"Success: Running on Primary device camera.";
+            }
+            else
+            {
+                std::cout<<"Some technical issue has been arised:: Camera device ID is changed or has never been assigned.";
+                throw "Contact for technical support: Issue Camera not recognised(CameraID: "+std::to_string(cameraID);
+            }
+        }
+
+        Mat resizedimg;
+        string infofilename=data.getIndexFile();
+        //cout<<infofilename<<" is index file";
+        infofile=fopen(infofilename.c_str(),"w");
+        if(infofile==NULL)
+            throw "Contact for technical support: File "+data.getIndexFile()+ "is not getting created";
+        long double count=0;/// especially for the to_string function// to give imgs different names in a sequence
+        bool ch=true;
+        //cout<<sizeof(int);
+        Mat imgtemp;
+        Mat imgtemp2;
+        while(ch){
+        try{
+        cam>>imgcol;
+        Mat img;
+
+        cvtColor(imgcol,img,CV_BGR2GRAY);
+        std::vector<Rect> faces;
+        resize(img,resizedimg,Size(img.cols/factor,img.rows/factor));
+        equalizeHist(resizedimg,resizedimg);
+        faces=detectfaces(resizedimg);
+        string finaladd;
+        string finoriface;
+        for(size_t i=0;i<faces.size();i++){
+            finaladd=prefixadd+"/img"+std::to_string(count)+".jpg";
+            //finoriface=prefixadd+"/imgOriFace"+std::to_string(count)+".jpg";
+            //processing the image for writting in the memory
+            faces[i].x=faces[i].x+0.11*faces[i].width;
+            faces[i].width-=0.11*faces[i].width;
+            faces[i].y=faces[i].y+0.10*faces[i].height;
+            //imgtemp2=resizedimg(faces[i]);
+            if(devmode)
+            cout<<"\n facefile before resizing:      "<<resizedimg.rows<<" X "<<resizedimg.cols<<"\n";
+            //resize(imgtemp2,imgtemp,Size(96,96),1);// can slow down the algo so, should be done in seperate module
+            cout<<"\ncheckpoint 1";
+            //imgtemp=imgtemp(Rect(0.11*96,0.10*96,imgtemp.cols-0.11*96,imgtemp.rows));
+            //processing is over
+            //imwrite(finaladd,imgtemp);
+            if(devmode)// if detection aglorithm is not accurate change the dims of rectangular pic
+            rectangle(resizedimg,Point(faces[i].x,faces[i].y),Point((faces[i].x+faces[i].width),(faces[i].y+faces[i].height)),Scalar(0,0,255),2,3);
+            rectangle(imgcol,Point(factor*faces[i].x,factor*faces[i].y),Point(factor*faces[i].x+factor*faces[i].width,factor*faces[i].y+factor*faces[i].height),Scalar(0,0,255),2,3);
+            Rect oriface= Rect(Point(factor*faces[i].x,factor*faces[i].y),Point(factor*faces[i].x+factor*faces[i].width,factor*faces[i].y+factor*faces[i].height));
+            Mat sh= imgcol(oriface);
+            cvtColor(sh,sh,CV_BGR2GRAY);
+            equalizeHist(sh,sh);
+            resize(sh,sh,Size(96,96),1);
+            imwrite(finaladd,sh);
+            imshow("oriface",sh);
+            if(devmode)
+            cout<<"File :"<<finaladd<<"created\n";
+            //waitKey(20);  // the stream to write in file is taking too much time, activate this
+            ts=getTickCount();
+            finaladd=finaladd+"\n";
+            fprintf(infofile,finaladd.c_str());
+            fflush(infofile);  // reseting the stream// an save key for just avoiding hangs
+            if(devmode)
+            cout<<(getTickCount()-ts)/getTickFrequency()<<"\n";
+            count++;
+
+        }
+        if(devmode)
+
+        imshow("original vid stream",resizedimg);
+        imshow("face-recognition by vintane",imgcol);
+        if('a'==waitKey(20))
+            ch=false;
+        }
+        catch(cv::Exception err){
+            cerr<<err.msg;
+            cout<<"\nIgnored the memory exception";
+        }
+
+        }
+
+        if(devmode)
+        cout<<"\nWritting the index file;\n";
+        fflush(infofile);
+        cvDestroyAllWindows();
+        //fclose(infofile); // activating it causing system delay
+        if(devmode)
+        cout<<"completed";
+        return data;
+        }
+        catch(string msgerr){
+            cout<<"Error: "<<msgerr;
+        }
+        }
+//end of trainerDataGrabber()// this function requires liitle boosting.. may be i can do that using boost libraries.
+//begin eigenfaces detection here.
+
+
+class modelTrainingData{
+private:
+
+    std::vector<Mat> images;
+    std::vector<int> labels;
+    bool readAllSubdirectory;
+    long double finalFileId;
+
+    void parse(string filename,string label,bool devmode=false){
+        std::ifstream file(filename.c_str(), ifstream::in);
+    cout<<"\n"<<filename;
+    if (!file) {
+        string error_message = "\n***************************\nNo valid input file was given, please check the given filename.";
+        CV_Error(CV_StsBadArg, error_message);
+    }
+    Mat imgtest;
+    if(devmode){
+
+    namedWindow("Loading Training data...",1);
+    }
+    string line, path, classlabel;
+    while (getline(file, line)) {
+
+        stringstream liness(line);						//the whole code of reading multiple
+        getline(liness, path);							//profiles can be upgraded using boos libs
+        classlabel= label;
+        if(!path.empty() && !classlabel.empty()) {
+            imgtest=imread(path,0);
+            images.push_back(imgtest);
+            if(devmode){
+            resize(imgtest,imgtest,Size(200,200));
+            imshow("Loading Training data...",imgtest);
+            waitKey(33);
+            }
+            labels.push_back(atoi(classlabel.c_str()));
+            }
+        }
+    }
+
+    public:
+
+    void focusAllSubdirectories(long double finalfile){
+        finalFileId=finalfile;
+        readAllSubdirectory=true;
+    }
+
+    void prepareTrainingData(candidateData data,bool devmode=false){
+    //namedWindow("Training model...",1);
+    string filename=data.getIndexFile();
+    int fileid=0;
+    string fileidname;
+
+    if(readAllSubdirectory==true && finalFileId!=0){
+        while(fileid<=finalFileId){
+            //cout<<"\npassed subdirectory condition";
+            try{
+        fileidname= to_string(fileid);
+        cout<<"\n*********\n"<<fileidname;
+        data.name(fileidname);
+        //cout<<"\n"<<data.getIndexFile();
+
+        parse(data.getIndexFile(),data.getPersonName(),devmode);
+        //getch();
+        //imshow("training model",imread(data.getIndexFile(),0));
+        //waitKey(33);
+        cout<<"\ntrained from "<<fileidname<<"subdirectory";
+        fileid++;
+        cout<<"\nincremented value of file id: "<<fileid;
+        }
+            catch(cv::Exception e){
+            cerr<<"\nSubdirectory is not present, skipping training from the this subdirectory.";
+            fileid++;
+            }
+        }
+    }
+    else
+        parse(filename,data.getPersonName(),devmode);
+
+    }
+
+    std::vector<Mat> getImages(){
+        return images;
+    }
+    std::vector<int> getLabels(){
+        return labels;
+    }
+
+    modelTrainingData(){
+    readAllSubdirectory=false;
+    finalFileId=0;
+    }
+
+    };
+
+
+
+
+
+int main(){
+///*
+//this section is just to see whether the candidate
+
+candidateData dev("C:/Users/Shailendra/Desktop/img","20");
+cout<<"\nperson: "<<dev.getPersonName();
+cout<<"\nindexfile: "<<dev.getIndexFile();
+cout<<"\nrootadrress: "<<dev.getRootAddress();
+cout<<"\npersonalfile: " <<dev.getPersonalFile();
+cout<<"\ncommercialfile: "<<dev.getCommercialFile();
+
+//*/
+
+
+    if(!facedetector.load(xmlmethodsaddress[0]))   // change here for leant model loading 0 for tree model
+            throw "Contact for technical support: casecadeclassifier is not loading the the haar model";
+
+
+    std::vector<Rect> faces;
+    std::vector<Mat> imgs;
+    std::vector<int> label;
+
+//candidateData yourdata= trainerDataGrabber("0",4,"C:/Users/Shailendra/Desktop/img",0,true);
+//cout<<yourdata.getIndexFile()<<" created";
+
+///////////////////////////////////////////////////////////////for recoognition and training/////////////////////////
+
+///*
+cout<<"\nStarting making trainervectorobject";
+candidateData yourdata("C:/Users/Shailendra/Desktop/img","15");
+modelTrainingData mtd;
+mtd.focusAllSubdirectories(20);
+
+Ptr<FaceRecognizer> model = createFisherFaceRecognizer();
+//Ptr<FaceRecognizer> model = createLBPHFaceRecognizer(1,1,1,1,100);
+
+string modeladdress= yourdata.getModelAddress();
+double start;
+try{
+     start= getTickCount();
+     cout<<"Loading Model...\nPlease wait for a while, I will tell you on ready.";
+model->load(modeladdress);
+cout<<"\n"<<"Time taken in secands: "<<(double)getTickCount()-start/(getTickFrequency()*1000);
+}
+catch(cv::Exception err){
+    cout<<"model not loaded\ngoing for new model training.\n";
+    start= getTickCount();
+    mtd.prepareTrainingData(yourdata,true);
+    imgs=mtd.getImages();
+    label=mtd.getLabels();
+cout<<"\nimgs size  "<<imgs.size()<<"  label size  "<<label.size();
+getch();
+
+    cout<<"\n*****************************Model Training started\n******************************\n";
+    model->train(imgs, label);
+    model->save(modeladdress);
+    cout<<"\n"<<"Time taken in secands: "<<(double)getTickCount()-start/(getTickFrequency()*1000);
+
+}
+
+cout<<"\n****************************************\nmodel ready to start training\n";
+
+
+
+
+cout<<"\n**********************\nModel trained\n";
+    VideoCapture camera;
+    camera.open(0);
+    namedWindow("predicted_face",1);
+    Mat testImg;
+    Mat testtemp;
+    Mat testtemp2;
+    Mat colimg;
+
+    namedWindow("realdetection",1);
+    int factor=4;
+    double confidence=10.0,totalconfi_dev=0,totalconfi_abhi=0;
+    int predictedname;
+    double devcount=0,abhicount=0,total_detection=0;
+    long frm=0;
+    while(true)
+    {
+        try{
+        camera>>colimg;
+        frm++;
+        //cout<<frm;
+        if(1){
+        cvtColor(colimg,testImg,CV_BGR2GRAY);
+
+        resize(testImg,testtemp2,Size(testImg.cols/factor,testImg.rows/factor));
+
+        equalizeHist(testtemp2,testtemp2);
+        faces=detectfaces(testtemp2);
+
+        for(size_t i=0;i<faces.size();i++){
+        faces[i].x=faces[i].x+0.11*faces[i].width;
+            faces[i].width-=0.11*faces[i].width;
+            faces[i].y=faces[i].y+0.10*faces[i].height;
+        total_detection++;
+        //testtemp=testtemp2(faces[i]);
+            Rect oriface= Rect(Point(factor*faces[i].x,factor*faces[i].y),Point(factor*faces[i].x+factor*faces[i].width,factor*faces[i].y+factor*faces[i].height));
+            testtemp= colimg(oriface);
+            cvtColor(testtemp,testtemp,CV_BGR2GRAY);
+            equalizeHist(testtemp,testtemp);
+
+        resize(testtemp,testtemp,Size(96,96),1);
+        //cout<<testtemp.rows<<" X "<<testtemp.cols;
+
+        rectangle(colimg,Point(factor*faces[i].x,factor*faces[i].y),Point(factor*faces[i].x+factor*faces[i].width,factor*faces[i].y+factor*faces[i].height),Scalar(0,0,255),2,3);
+
+        model->predict(testtemp, predictedname,confidence);
+
+        rectangle(testtemp2,Point(faces[i].x,faces[i].y),Point(faces[i].x+faces[i].width,faces[i].y+faces[i].height),Scalar(0,0,255),2,3);
+        if(predictedname==-1)
+                cout<<"\nlabel: "<<predictedname<<"       Confidence: "<<confidence;
+
+        else{
+        cout<<"\nlabel: "<<predictedname<<"       Confidence: "<<confidence;
+        if(!predictedname){
+            totalconfi_dev=totalconfi_dev+confidence;
+            devcount++;
+        }
+        else{
+            abhicount++;
+            totalconfi_abhi=totalconfi_abhi+confidence;
+        }
+        if(total_detection==0)
+            cout<<"\nunknown accuracies";
+        else
+        cout<<"\nAccuracy for dev: "<<100*(devcount/total_detection)<<"% for abhi: "<<100*(abhicount/total_detection)<<"%";
+        string name_per=predictedname?"Abhi":"Dev";
+        cout<<"\ndetected face: "<<name_per<<"\t##Dev: "<<devcount<<" Abhi: "<<abhicount<<" Total_detection: "<<total_detection<<" rest_detec: "<<total_detection-(devcount+abhicount);
+        cout<<"\nAverage confidence for dev: "<<totalconfi_dev/devcount<<"  for abhi: "<<totalconfi_abhi/abhicount;
+        cout<<"\n*******************************************************************************";
+        putText(colimg,predictedname?"Abhishek Prajapati":"Devendra Kaithal",Point(faces[i].x,faces[i].y),2,1,Scalar(0,0,255),2,7);
+        }}
+    //imshow("realdetection",testtemp2);
+        }
+    imshow("predicted_face",colimg);
+    waitKey(33);
+        }
+        catch(cv::Exception e){
+        cout<<"image frame not valid";
+        }
+
+
+    }
+
+    //*/
+
+system("pause");
+
+return 0;
+}
