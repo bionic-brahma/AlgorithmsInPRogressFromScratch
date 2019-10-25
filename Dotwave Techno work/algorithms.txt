@@ -1,0 +1,11 @@
+1. ycbcr color scheme face detection algorithm
+
+2. 154 landmarks algorithm used in this paper can be used for face boundary determination
+http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0140347 
+
+
+3. Active shape model
+http://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/BMVA96Tut/node37.html
+
+4. Active appearance model can also be used as it also gives face boundary points
+http://www.lysator.liu.se/~eru/research/ 																																																																										

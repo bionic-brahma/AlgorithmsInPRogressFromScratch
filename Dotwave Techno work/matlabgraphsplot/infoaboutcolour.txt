@@ -1,0 +1,7 @@
+%here we are using following color for following
+%red =heart
+%green=oval
+%blue=round
+%black=square;
+%magneta=obolong
+to get zoom images open matlab figure in matlab and use zoom tool
